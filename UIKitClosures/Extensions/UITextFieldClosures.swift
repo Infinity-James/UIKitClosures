@@ -39,7 +39,7 @@ private class Box<T> {
 
     This extension to UITextField adds the ability to assign closures to what would usually need to be delegate methods.
 */
-extension UITextField {
+public extension UITextField {
     
     //	MARK: Associated Keys Struct
     
