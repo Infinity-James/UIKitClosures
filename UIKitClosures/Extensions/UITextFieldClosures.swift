@@ -9,14 +9,37 @@
 import UIKit
 import ObjectiveC
 
+//	MARK: Box Class
+
+/**
+    `Box`
+
+    Boxes a value to be able to use it with Objective-C.
+*/
+private class Box<T> {
+    /// The value boxed within this class.
+    let value: T
+    
+    /**
+        Initializes a boxed value with the value to box.
+     
+        - Parameter value:  The value to box.
+     
+        - Returns:  An initialized box with the given value.
+     */
+    init(value: T) {
+        self.value = value
+    }
+}
+
 //	MARK: UITextField Closures Extension
 
 /**
     `UITextField`
 
     This extension to UITextField adds the ability to assign closures to what would usually need to be delegate methods.
- */
-public extension UITextField {
+*/
+extension UITextField {
     
     //	MARK: Associated Keys Struct
     
@@ -24,11 +47,11 @@ public extension UITextField {
         `AssociatedKeys`
     
         A private struct which holds the keys for retrieving associated values.
-     */
+    */
     private struct AssociatedKeys {
         /// The handle for retrieving or storing the text field delegate as an associated value.
         static let textFieldDelegateHandle = "textFieldDelegateHandle"
-
+        
         /// The handle for retrieving or storing the `shouldBeginEditingClosure` as an associated value.
         static let textFieldShouldBeginEditingHandle = "textFieldShouldBeginEditingHandle"
         /// The handle for retrieving or storing the `shouldEndEditingClosure` as an associated value.
@@ -61,13 +84,14 @@ public extension UITextField {
     
     /**
         Manages the fact that we need to be the delegate for this UITextField, but there may be an object that also wants to be the delegate.
-     */
+    */
     private func manageDelegate() {
         //  if we are not our own delegate we need to set ourselves as such but keep the old delegate for messaging where appropriate
-        if let textFieldDelegate = delegate where textFieldDelegate !== (self as UITextFieldDelegate) {
+        if let textFieldDelegate = delegate where !(textFieldDelegate is UITextField) {
             self.textFieldDelegate = textFieldDelegate
-            delegate = self
         }
+        
+        delegate = self
     }
     
     /// The actual delegate for the text field (besides us).
@@ -86,21 +110,25 @@ public extension UITextField {
     /// The closure to be called to determine whether the text field should begin editing.
     var shouldBeginEditingClosure: TextFieldResponse? {
         get {
-            return objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldBeginEditingHandle) as? TextFieldResponse
+            guard let boxedValue = objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldBeginEditingHandle) as? Box<TextFieldResponse> else { return nil }
+            return boxedValue.value
         }
         set {
-            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldBeginEditingHandle, (newValue as! AnyObject!), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let boxedValue: Box<TextFieldResponse>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldBeginEditingHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
         }
     }
-
+    
     /// The closure to be called to determine whether the text field should end editing.
     var shouldEndEditingClosure: TextFieldResponse? {
         get {
-            return objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldEndEditingHandle) as? TextFieldResponse
+            guard let boxedValue = objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldEndEditingHandle) as? Box<TextFieldResponse> else { return nil }
+            return boxedValue.value
         }
         set {
-            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldEndEditingHandle, (newValue as! AnyObject!), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let boxedValue: Box<TextFieldResponse>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldEndEditingHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
         }
     }
@@ -108,21 +136,25 @@ public extension UITextField {
     /// The closure to be called when the text field did begin editing.
     var didBeginEditingClosure: TextFieldAction? {
         get {
-            return objc_getAssociatedObject(self, AssociatedKeys.textFieldDidBeginEditingHandle) as? TextFieldAction
+            guard let boxedValue = objc_getAssociatedObject(self, AssociatedKeys.textFieldDidBeginEditingHandle) as? Box<TextFieldAction> else { return nil }
+            return boxedValue.value
         }
         set {
-            objc_setAssociatedObject(self, AssociatedKeys.textFieldDidBeginEditingHandle, (newValue as! AnyObject!), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let boxedValue: Box<TextFieldAction>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, AssociatedKeys.textFieldDidBeginEditingHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
         }
     }
-
+    
     /// The closure to be called when the text field end begin editing.
     var didEndEditingClosure: TextFieldAction? {
         get {
-            return objc_getAssociatedObject(self, AssociatedKeys.textFieldDidEndEditingHandle) as? TextFieldAction
+            guard let boxedValue = objc_getAssociatedObject(self, AssociatedKeys.textFieldDidEndEditingHandle) as? Box<TextFieldAction> else { return nil }
+            return boxedValue.value
         }
         set {
-            objc_setAssociatedObject(self, AssociatedKeys.textFieldDidEndEditingHandle, (newValue as! AnyObject!), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let boxedValue: Box<TextFieldAction>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, AssociatedKeys.textFieldDidEndEditingHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
         }
     }
@@ -130,31 +162,37 @@ public extension UITextField {
     /// The closure to be called to determine whether the chracters in the text field should change.
     var shouldChangeCharactersClosure: TextFieldChangeCharacters? {
         get {
-            return objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldChangeCharactersHandle) as? TextFieldChangeCharacters
+            guard let boxedValue = objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldChangeCharactersHandle) as? Box<TextFieldChangeCharacters> else { return nil }
+            return boxedValue.value
         }
         set {
-            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldChangeCharactersHandle, (newValue as! AnyObject!), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let boxedValue: Box<TextFieldChangeCharacters>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldChangeCharactersHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
         }
     }
-
+    
     /// The closure to be called to determine whether the text field should clear.
     var shouldClearClosure: TextFieldResponse? {
         get {
-            return objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldClearHandle) as? TextFieldResponse
+            guard let boxedValue = objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldClearHandle) as? Box<TextFieldResponse> else { return nil }
+            return boxedValue.value
         }
         set {
-            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldClearHandle, (newValue as! AnyObject!), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let boxedValue: Box<TextFieldResponse>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldClearHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
         }
     }
     /// The closure to be called to determine whether the text field should return.
     var shouldReturnClosure: TextFieldResponse? {
         get {
-            return objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldReturnHandle) as? TextFieldResponse
+            guard let boxedValue = objc_getAssociatedObject(self, AssociatedKeys.textFieldShouldReturnHandle) as? Box<TextFieldResponse> else { return nil }
+            return boxedValue.value
         }
         set {
-            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldReturnHandle, (newValue as! AnyObject!), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            let boxedValue: Box<TextFieldResponse>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, AssociatedKeys.textFieldShouldReturnHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
         }
     }
