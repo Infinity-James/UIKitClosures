@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A03D3C61C9C003100357A4E /* UITextFieldClosures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A03D3C51C9C003100357A4E /* UITextFieldClosures.swift */; };
 		1A14A1111C9AC81100213FF4 /* UIKitClosures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A14A1061C9AC81100213FF4 /* UIKitClosures.framework */; };
-		1A1878DB1C9B09C4000CCCC9 /* UIKitClosures.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1878D91C9B09C4000CCCC9 /* UIKitClosures.h */; };
+		1A1878DB1C9B09C4000CCCC9 /* UIKitClosures.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1878D91C9B09C4000CCCC9 /* UIKitClosures.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A1878E11C9B09CB000CCCC9 /* UIKitClosuresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1878DE1C9B09CB000CCCC9 /* UIKitClosuresTests.swift */; };
 /* End PBXBuildFile section */
 
