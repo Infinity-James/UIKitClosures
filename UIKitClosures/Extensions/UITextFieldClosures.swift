@@ -12,20 +12,20 @@ import ObjectiveC
 //	MARK: Box Class
 
 /**
- `Box`
+    `Box`
  
- Boxes a value to be able to use it with Objective-C.
+    Boxes a value to be able to use it with Objective-C.
  */
 private class Box<T> {
     /// The value boxed within this class.
     let value: T
     
     /**
-     Initializes a boxed value with the value to box.
+        Initializes a boxed value with the value to box.
      
-     - Parameter value:  The value to box.
+        - Parameter value:  The value to box.
      
-     - Returns:  An initialized box with the given value.
+        - Returns:  An initialized box with the given value.
      */
     init(value: T) {
         self.value = value
@@ -35,40 +35,40 @@ private class Box<T> {
 //	MARK: UITextField Closures Extension
 
 /**
- `UITextField`
+    `UITextField`
  
- This extension to UITextField adds the ability to assign closures to what would usually need to be delegate methods.
+    This extension to UITextField adds the ability to assign closures to what would usually need to be delegate methods.
  */
 public extension UITextField {
     
     //	MARK: Associated Keys Struct
     
     /**
-     `AssociatedKeys`
+        `AssociatedKeys`
      
-     A private struct which holds the keys for retrieving associated values.
+        A private struct which holds the keys for retrieving associated values.
      */
     private struct AssociatedKeys {
         /// The handle for retrieving or storing the text field delegate as an associated value.
-        static var textFieldDelegateHandle: NSString = "textFieldDelegateHandle"
+        static var textFieldDelegateHandle = "textFieldDelegateHandle"
         
         /// The handle for retrieving or storing the `shouldBeginEditingClosure` as an associated value.
-        static var textFieldShouldBeginEditingHandle: NSString = "textFieldShouldBeginEditingHandle"
+        static var textFieldShouldBeginEditingHandle = "textFieldShouldBeginEditingHandle"
         /// The handle for retrieving or storing the `shouldEndEditingClosure` as an associated value.
-        static var textFieldShouldEndEditingHandle: NSString = "textFieldShouldEndEditingHandle"
+        static var textFieldShouldEndEditingHandle = "textFieldShouldEndEditingHandle"
         
         /// The handle for retrieving or storing the `didBeginEditingClosure` as an associated value.
-        static var textFieldDidBeginEditingHandle: NSString = "textFieldDidBeginEditingHandle"
+        static var textFieldDidBeginEditingHandle = "textFieldDidBeginEditingHandle"
         /// The handle for retrieving or storing the `didEndEditingClosure` as an associated value.
-        static var textFieldDidEndEditingHandle: NSString = "textFieldDidEndEditingHandle"
+        static var textFieldDidEndEditingHandle = "textFieldDidEndEditingHandle"
         
         /// The handle for retrieving or storing the `shouldChangeCharactersClosure` as an associated value.
-        static var textFieldShouldChangeCharactersHandle: NSString = "textFieldShouldChangeCharactersHandle"
+        static var textFieldShouldChangeCharactersHandle = "textFieldShouldChangeCharactersHandle"
         
         /// The handle for retrieving or storing the `shouldClearClosure` as an associated value.
-        static var textFieldShouldClearHandle: NSString = "textFieldShouldClearHandle"
+        static var textFieldShouldClearHandle = "textFieldShouldClearHandle"
         /// The handle for retrieving or storing the `shouldReturnClosure` as an associated value.
-        static var textFieldShouldReturnHandle: NSString = "textFieldShouldReturnHandle"
+        static var textFieldShouldReturnHandle = "textFieldShouldReturnHandle"
     }
     
     //	MARK: Type Aliases
@@ -83,7 +83,7 @@ public extension UITextField {
     //	MARK: Delegate Management
     
     /**
-     Manages the fact that we need to be the delegate for this UITextField, but there may be an object that also wants to be the delegate.
+        Manages the fact that we need to be the delegate for this UITextField, but there may be an object that also wants to be the delegate.
      */
     private func manageDelegate() {
         //  if we are not our own delegate we need to set ourselves as such but keep the old delegate for messaging where appropriate
@@ -108,7 +108,7 @@ public extension UITextField {
     //	MARK: UITextField Closure Access
     
     /// The closure to be called to determine whether the text field should begin editing.
-    var shouldBeginEditingClosure: TextFieldResponse? {
+    public var shouldBeginEditingClosure: TextFieldResponse? {
         get {
             guard let boxedValue = objc_getAssociatedObject(self, &AssociatedKeys.textFieldShouldBeginEditingHandle) as? Box<TextFieldResponse> else { return nil }
             return boxedValue.value
@@ -162,19 +162,12 @@ public extension UITextField {
     /// The closure to be called to determine whether the chracters in the text field should change.
     var shouldChangeCharactersClosure: TextFieldChangeCharacters? {
         get {
-            print("Get: \(self)")
-            print("Get: \(unsafeAddressOf(AssociatedKeys.textFieldShouldChangeCharactersHandle))")
-            print("Get: \(unsafeAddressOf(AssociatedKeys.textFieldDelegateHandle))")
-            print("Get: \(objc_getAssociatedObject(self, &AssociatedKeys.textFieldShouldChangeCharactersHandle))")
             guard let boxedValue = objc_getAssociatedObject(self, &AssociatedKeys.textFieldShouldChangeCharactersHandle) as? Box<TextFieldChangeCharacters> else { return nil }
             return boxedValue.value
         }
         set {
-            print("Set: \(self)")
-            print("Set: \(unsafeAddressOf(AssociatedKeys.textFieldShouldChangeCharactersHandle))")
             let boxedValue: Box<TextFieldChangeCharacters>? = newValue != nil ? Box(value: newValue!) : nil
             objc_setAssociatedObject(self, &AssociatedKeys.textFieldShouldChangeCharactersHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            print("Set: \(objc_getAssociatedObject(self, &AssociatedKeys.textFieldShouldChangeCharactersHandle))")
             manageDelegate()
         }
     }
