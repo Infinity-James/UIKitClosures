@@ -79,6 +79,8 @@ public extension UITextField {
     typealias TextFieldResponse = (textField: UITextField) -> (Bool)
     /// A closure to be called when an characters have changes within the text field.
     typealias TextFieldChangeCharacters = (textField: UITextField, range: NSRange, replacementText: String) -> (Bool)
+    /// A closure to be called when the text has changed.
+    typealias TextFieldTextChanged = (text: String) -> ()
     
     //	MARK: Delegate Management
     
@@ -92,6 +94,22 @@ public extension UITextField {
         }
         
         delegate = self
+    }
+    
+    /**
+        Observes the text field text changed notification.
+     */
+    private func monitorTextChanges() {
+        /// if we have are already monitoring text changes return early
+        if let target = targetForAction(#selector(UITextField.textChanged(_:)), withSender: self) as? UITextField where target == self {
+            return
+        }
+        
+        addTarget(self, action: #selector(UITextField.textChanged(_:)), forControlEvents: UIControlEvents.EditingChanged)
+    }
+    
+    @objc private func textChanged(notification: NSNotification) {
+        textChangedClosure?(text: text ?? "")
     }
     
     /// The actual delegate for the text field (besides us).
@@ -184,6 +202,7 @@ public extension UITextField {
             manageDelegate()
         }
     }
+    
     /// The closure to be called to determine whether the text field should return.
     var shouldReturnClosure: TextFieldResponse? {
         get {
@@ -194,6 +213,19 @@ public extension UITextField {
             let boxedValue: Box<TextFieldResponse>? = newValue != nil ? Box(value: newValue!) : nil
             objc_setAssociatedObject(self, &AssociatedKeys.textFieldShouldReturnHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             manageDelegate()
+        }
+    }
+    
+    /// The closure to be called to when the text in the text field changes.
+    var textChangedClosure: TextFieldTextChanged? {
+        get {
+            guard let boxedValue = objc_getAssociatedObject(self, &AssociatedKeys.textFieldShouldReturnHandle) as? Box<TextFieldTextChanged> else { return nil }
+            return boxedValue.value
+        }
+        set {
+            let boxedValue: Box<TextFieldTextChanged>? = newValue != nil ? Box(value: newValue!) : nil
+            objc_setAssociatedObject(self, &AssociatedKeys.textFieldShouldReturnHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            monitorTextChanges()
         }
     }
 }
