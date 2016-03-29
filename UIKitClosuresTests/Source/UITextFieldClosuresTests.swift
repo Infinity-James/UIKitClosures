@@ -7,30 +7,25 @@
 //
 
 import XCTest
-@testable import UIKitClosures
+import UIKitClosures
 
-class UIKitClosuresTests: XCTestCase {
+//	MARK: UITextField Closures Tests
+
+/**
+    `UITextFieldClosuresTests`
+ 
+    Tests the closures that have been added to the UITextField.
+ */
+class UITextFieldClosuresTests: XCTestCase {
     
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    //	MARK: Delegate Replacement Closures
+    
+    func testShouldChangeCharacters() {
+        
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
+    //	MARK: Action Replacement Closures
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testTextChanged() {
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }
