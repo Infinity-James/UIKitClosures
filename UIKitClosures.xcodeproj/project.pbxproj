@@ -10,7 +10,7 @@
 		1A03D3C61C9C003100357A4E /* UITextFieldClosures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A03D3C51C9C003100357A4E /* UITextFieldClosures.swift */; };
 		1A14A1111C9AC81100213FF4 /* UIKitClosures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A14A1061C9AC81100213FF4 /* UIKitClosures.framework */; };
 		1A1878DB1C9B09C4000CCCC9 /* UIKitClosures.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1878D91C9B09C4000CCCC9 /* UIKitClosures.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1A1878E11C9B09CB000CCCC9 /* UIKitClosuresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1878DE1C9B09CB000CCCC9 /* UIKitClosuresTests.swift */; };
+		1A1878E11C9B09CB000CCCC9 /* UITextFieldClosuresTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A1878DE1C9B09CB000CCCC9 /* UITextFieldClosuresTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,7 +29,7 @@
 		1A14A1101C9AC81100213FF4 /* UIKitClosuresTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UIKitClosuresTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A1878D81C9B09C4000CCCC9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A1878D91C9B09C4000CCCC9 /* UIKitClosures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKitClosures.h; sourceTree = "<group>"; };
-		1A1878DE1C9B09CB000CCCC9 /* UIKitClosuresTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitClosuresTests.swift; sourceTree = "<group>"; };
+		1A1878DE1C9B09CB000CCCC9 /* UITextFieldClosuresTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITextFieldClosuresTests.swift; sourceTree = "<group>"; };
 		1A1878E01C9B09CB000CCCC9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,7 +108,7 @@
 		1A1878DD1C9B09CB000CCCC9 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				1A1878DE1C9B09CB000CCCC9 /* UIKitClosuresTests.swift */,
+				1A1878DE1C9B09CB000CCCC9 /* UITextFieldClosuresTests.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -237,7 +237,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A1878E11C9B09CB000CCCC9 /* UIKitClosuresTests.swift in Sources */,
+				1A1878E11C9B09CB000CCCC9 /* UITextFieldClosuresTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

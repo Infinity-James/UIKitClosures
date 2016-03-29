@@ -69,6 +69,9 @@ public extension UITextField {
         static var textFieldShouldClearHandle = "textFieldShouldClearHandle"
         /// The handle for retrieving or storing the `shouldReturnClosure` as an associated value.
         static var textFieldShouldReturnHandle = "textFieldShouldReturnHandle"
+        
+        /// The handle for retrieving or storing the `textChangedClosure` as an associated value.
+        static var textChangedHandle = "textChangedHandle"
     }
     
     //	MARK: Type Aliases
@@ -100,15 +103,10 @@ public extension UITextField {
         Observes the text field text changed notification.
      */
     private func monitorTextChanges() {
-        /// if we have are already monitoring text changes return early
-        if let target = targetForAction(#selector(UITextField.textChanged(_:)), withSender: self) as? UITextField where target == self {
-            return
-        }
-        
-        addTarget(self, action: #selector(UITextField.textChanged(_:)), forControlEvents: UIControlEvents.EditingChanged)
+        addTarget(self, action: #selector(UITextField.textChanged), forControlEvents: .EditingChanged)
     }
     
-    @objc private func textChanged(notification: NSNotification) {
+    @objc private func textChanged() {
         textChangedClosure?(text: text ?? "")
     }
     
@@ -219,12 +217,12 @@ public extension UITextField {
     /// The closure to be called to when the text in the text field changes.
     var textChangedClosure: TextFieldTextChanged? {
         get {
-            guard let boxedValue = objc_getAssociatedObject(self, &AssociatedKeys.textFieldShouldReturnHandle) as? Box<TextFieldTextChanged> else { return nil }
+            guard let boxedValue = objc_getAssociatedObject(self, &AssociatedKeys.textChangedHandle) as? Box<TextFieldTextChanged> else { return nil }
             return boxedValue.value
         }
         set {
             let boxedValue: Box<TextFieldTextChanged>? = newValue != nil ? Box(value: newValue!) : nil
-            objc_setAssociatedObject(self, &AssociatedKeys.textFieldShouldReturnHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AssociatedKeys.textChangedHandle, boxedValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             monitorTextChanges()
         }
     }
