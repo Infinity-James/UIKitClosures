@@ -48,7 +48,7 @@ public extension UITextField {
      
         A private struct which holds the keys for retrieving associated values.
      */
-    private struct AssociatedKeys {
+    fileprivate struct AssociatedKeys {
         /// The handle for retrieving or storing the text field delegate as an associated value.
         static var textFieldDelegateHandle = "textFieldDelegateHandle"
         
@@ -77,22 +77,22 @@ public extension UITextField {
     //	MARK: Type Aliases
     
     /// A closure to be called when an action has been performed in the text field.
-    typealias TextFieldAction = (textField: UITextField) -> ()
+    typealias TextFieldAction = (_ textField: UITextField) -> ()
     /// A closure to be the text field requires a response.
-    typealias TextFieldResponse = (textField: UITextField) -> (Bool)
+    typealias TextFieldResponse = (_ textField: UITextField) -> (Bool)
     /// A closure to be called when an characters have changes within the text field.
-    typealias TextFieldChangeCharacters = (textField: UITextField, range: NSRange, replacementText: String) -> (Bool)
+    typealias TextFieldChangeCharacters = (_ textField: UITextField, _ range: NSRange, _ replacementText: String) -> (Bool)
     /// A closure to be called when the text has changed.
-    typealias TextFieldTextChanged = (text: String) -> ()
+    typealias TextFieldTextChanged = (_ text: String) -> ()
     
     //	MARK: Delegate Management
     
     /**
         Manages the fact that we need to be the delegate for this UITextField, but there may be an object that also wants to be the delegate.
      */
-    private func manageDelegate() {
+    fileprivate func manageDelegate() {
         //  if we are not our own delegate we need to set ourselves as such but keep the old delegate for messaging where appropriate
-        if let textFieldDelegate = delegate where !(textFieldDelegate is UITextField) {
+        if let textFieldDelegate = delegate, !(textFieldDelegate is UITextField) {
             self.textFieldDelegate = textFieldDelegate
         }
         
@@ -102,16 +102,16 @@ public extension UITextField {
     /**
         Observes the text field text changed notification.
      */
-    private func monitorTextChanges() {
-        addTarget(self, action: #selector(UITextField.textChanged), forControlEvents: .EditingChanged)
+    fileprivate func monitorTextChanges() {
+        addTarget(self, action: #selector(UITextField.textChanged), for: .editingChanged)
     }
     
-    @objc private func textChanged() {
-        textChangedClosure?(text: text ?? "")
+    @objc fileprivate func textChanged() {
+        textChangedClosure?(text ?? "")
     }
     
     /// The actual delegate for the text field (besides us).
-    private var textFieldDelegate: UITextFieldDelegate? {
+    fileprivate var textFieldDelegate: UITextFieldDelegate? {
         get {
             return objc_getAssociatedObject(self, &AssociatedKeys.textFieldDelegateHandle) as? UITextFieldDelegate
         }
@@ -232,71 +232,71 @@ public extension UITextField {
 
 extension UITextField: UITextFieldDelegate {
     
-    public func textFieldDidBeginEditing(textField: UITextField) {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
         if let didBeginEditingClosure = didBeginEditingClosure {
-            didBeginEditingClosure(textField: textField)
+            didBeginEditingClosure(textField)
         } else if let delegate = textFieldDelegate {
             delegate.textFieldDidBeginEditing?(textField)
         }
     }
     
-    public func textFieldDidEndEditing(textField: UITextField) {
+    public func textFieldDidEndEditing(_ textField: UITextField) {
         if let didEndEditingClosure = didEndEditingClosure {
-            didEndEditingClosure(textField: textField)
+            didEndEditingClosure(textField)
         } else if let delegate = textFieldDelegate {
             delegate.textFieldDidEndEditing?(textField)
         }
     }
     
-    public func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if let shouldBeginEditingClosure = shouldBeginEditingClosure {
-            return shouldBeginEditingClosure(textField: textField)
+            return shouldBeginEditingClosure(textField)
         } else if let delegate = textFieldDelegate,
-            response = delegate.textFieldShouldBeginEditing?(textField) {
+            let response = delegate.textFieldShouldBeginEditing?(textField) {
             return response
         }
         
         return true
     }
     
-    public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let shouldChangeCharactersClosure = shouldChangeCharactersClosure {
-            return shouldChangeCharactersClosure(textField: textField, range: range, replacementText: string)
+            return shouldChangeCharactersClosure(textField, range, string)
         } else if let delegate = textFieldDelegate,
-            response = delegate.textField?(textField, shouldChangeCharactersInRange: range, replacementString: string) {
+            let response = delegate.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) {
             return response
         }
         
         return true
     }
     
-    public func textFieldShouldClear(textField: UITextField) -> Bool {
+    public func textFieldShouldClear(_ textField: UITextField) -> Bool {
         if let shouldClearClosure = shouldClearClosure {
-            return shouldClearClosure(textField: textField)
+            return shouldClearClosure(textField)
         } else if let delegate = textFieldDelegate,
-            response = delegate.textFieldShouldClear?(textField) {
+            let response = delegate.textFieldShouldClear?(textField) {
             return response
         }
         
         return true
     }
     
-    public func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+    public func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         if let shouldEndEditingClosure = shouldEndEditingClosure {
-            return shouldEndEditingClosure(textField: textField)
+            return shouldEndEditingClosure(textField)
         } else if let delegate = textFieldDelegate,
-            response = delegate.textFieldShouldEndEditing?(textField) {
+            let response = delegate.textFieldShouldEndEditing?(textField) {
             return response
         }
         
         return true
     }
     
-    public func textFieldShouldReturn(textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let shouldReturnClosure = shouldReturnClosure {
-            return shouldReturnClosure(textField: textField)
+            return shouldReturnClosure(textField)
         } else if let delegate = textFieldDelegate,
-            response = delegate.textFieldShouldReturn?(textField) {
+            let response = delegate.textFieldShouldReturn?(textField) {
             return response
         }
         
