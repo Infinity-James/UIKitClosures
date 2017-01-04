@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name = "UIKitClosures"
-  spec.version = "0.0.1"
+  spec.version = "0.1.0"
   spec.summary = "Adds closures to UIKit components."
   spec.homepage = "https://github.com/Infinity-James/UIKitClosures"
   spec.license = { type: 'MIT', file: 'LICENSE' }
